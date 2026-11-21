@@ -234,7 +234,7 @@ function setupTheme() {
   const root = document.documentElement;
   let saved = null;
   try { saved = localStorage.getItem('hl-theme'); } catch {}
-  const pref = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  const pref = saved || 'light';
   root.dataset.theme = pref;
   $('theme').addEventListener('click', () => {
     root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';

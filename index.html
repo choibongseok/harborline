@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-theme="dark">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,14 +11,14 @@
 <body>
 <a class="skiplink" href="#timeline">본문으로 건너뛰기</a>
 <header class="top">
-  <div class="brand">
-    <span class="mark" aria-hidden="true">▞</span>
-    <span class="word">harborline</span>
-    <span class="sub">upgrade simulator</span>
-  </div>
-  <p class="banner" role="note"><strong>브라우저 시뮬레이션</strong> — 판정 로직만 실제 코드(Go → WebAssembly). 서버·도커·네트워크 호출 없음.</p>
-  <button id="theme" class="ghost" type="button" aria-label="테마 전환(다크/라이트)">◐</button>
+  <div class="brand"><span class="word">harborline</span><span class="sub">upgrade simulator</span></div>
+  <button id="theme" class="ghost" type="button" aria-label="테마 전환(라이트/다크)">◐</button>
 </header>
+<div class="page">
+  <h1>업그레이드 판정 시뮬레이터</h1>
+  <p class="lead">인터넷이 없는 고객사 서버에 설치형 릴리스를 올릴 때, 버전 게이트·자동 롤백·정지 후 복구가 어떻게 결정되는지 직접 실패를 넣어 보며 확인합니다.</p>
+  <p class="banner" role="note"><strong>브라우저 시뮬레이션</strong> — 판정 로직만 실제 코드(Go → WebAssembly). 서버·도커·네트워크 호출 없음.</p>
+</div>
 
 <main>
   <section class="panel controls" aria-labelledby="h-scn">

@@ -2,42 +2,42 @@
   "TestFreshInstallRunsOfflineWithCustomerSideAdapters": [
     {
       "cmd": "harborctl install --bundle ./harborline-v1.0.0 --pubkey ./release.pub",
-      "output": "[ok  ] 컨테이너 런타임                     docker 데몬 응답\n[ok  ] 디스크                          남은 11.7GB (필요 1GB)\n[ok  ] 인증서 ca.pem                   인증서 1개, 모두 30일 넘게 유효\n[warn] TLS 종단 점검                    이미지가 아직 없어 설치 후 `harborctl doctor` 에서 확인\n  이미지 적재: images/harborline-app-v1.0.0.tar\n  이미지 적재: images/postgres-16-alpine.tar\n  적용: 0001_init.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     신규 설치\n[skip] backup   신규 설치는 백업할 대상이 없음\n[ok  ] load     컨테이너 이미지 적재\n[ok  ] migrate  마이그레이션 적용 (compatible)\n[ok  ] switch   새 버전으로 교체\n[ok  ] health   상태 점검 통과\n판정: success\n",
+      "output": "[ok  ] 컨테이너 런타임                     docker 데몬 응답\n[ok  ] 디스크                          남은 11.6GB (필요 1GB)\n[ok  ] 인증서 ca.pem                   인증서 1개, 모두 30일 넘게 유효\n[warn] TLS 종단 점검                    이미지가 아직 없어 설치 후 `harborctl doctor` 에서 확인\n  이미지 적재: images/harborline-app-v1.0.0.tar\n  이미지 적재: images/postgres-16-alpine.tar\n  적용: 0001_init.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     신규 설치\n[skip] backup   신규 설치는 백업할 대상이 없음\n[ok  ] load     컨테이너 이미지 적재\n[ok  ] migrate  마이그레이션 적용 (compatible)\n[ok  ] switch   새 버전으로 교체\n[ok  ] health   상태 점검 통과\n판정: success\n",
       "exit": 0
     }
   ],
   "TestUpgradeWithoutSchemaChangeKeepsData": [
     {
       "cmd": "harborctl upgrade --bundle ./harborline-v1.1.0 --pubkey ./release.pub",
-      "output": "  백업 20261121T101115.750Z (DB 7560 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v1.1.0.tar\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.0.0 → v1.1.0 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[skip] migrate  스키마 변경 없음\n[ok  ] switch   새 버전으로 교체\n[ok  ] health   상태 점검 통과\n판정: success\n",
+      "output": "  백업 20261121T103350.950Z (DB 7556 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v1.1.0.tar\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.0.0 → v1.1.0 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[skip] migrate  스키마 변경 없음\n[ok  ] switch   새 버전으로 교체\n[ok  ] health   상태 점검 통과\n판정: success\n",
       "exit": 0
     }
   ],
   "TestUpgradeWithExpandMigrationAddsColumnsAndKeepsData": [
     {
       "cmd": "harborctl upgrade --bundle ./harborline-v1.2.0 --pubkey ./release.pub",
-      "output": "  백업 20261121T101122.321Z (DB 7558 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v1.2.0.tar\n  적용: 0002_inquiry_state.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.0.0 → v1.2.0 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[ok  ] migrate  마이그레이션 적용 (compatible)\n[ok  ] switch   새 버전으로 교체\n[ok  ] health   상태 점검 통과\n판정: success\n",
+      "output": "  백업 20261121T103357.514Z (DB 7555 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v1.2.0.tar\n  적용: 0002_inquiry_state.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.0.0 → v1.2.0 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[ok  ] migrate  마이그레이션 적용 (compatible)\n[ok  ] switch   새 버전으로 교체\n[ok  ] health   상태 점검 통과\n판정: success\n",
       "exit": 0
     }
   ],
   "TestFailedHealthCheckWithoutSchemaChangeRollsBackAutomatically": [
     {
       "cmd": "harborctl upgrade --bundle ./harborline-v1.1.1 --pubkey ./release.pub",
-      "output": "  백업 20261121T101129.176Z (DB 7556 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v1.1.1.tar\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.1.0 → v1.1.1 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[skip] migrate  스키마 변경 없음\n[ok  ] switch   새 버전으로 교체\n[fail] health   20초 안에 상태 점검을 통과하지 못함: docker exec hl-e2e-app /harborline: exit status 1: harborline: healthz 503\n[ok  ] rollback 이전 버전으로 복귀, 상태 점검 통과 (v1.1.0)\n판정: rolled_back — health 단계에서 실패해 v1.1.0 로 자동 복귀했습니다.\n",
+      "output": "  백업 20261121T103404.357Z (DB 7556 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v1.1.1.tar\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.1.0 → v1.1.1 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[skip] migrate  스키마 변경 없음\n[ok  ] switch   새 버전으로 교체\n[fail] health   20초 안에 상태 점검을 통과하지 못함: docker exec hl-e2e-app /harborline: exit status 1: harborline: healthz 503\n[ok  ] rollback 이전 버전으로 복귀, 상태 점검 통과 (v1.1.0)\n판정: rolled_back — health 단계에서 실패해 v1.1.0 로 자동 복귀했습니다.\n",
       "exit": 4
     }
   ],
   "TestMigrationFailingMidwayKeepsPreviousVersionServing": [
     {
       "cmd": "harborctl upgrade --bundle ./harborline-v1.2.1 --pubkey ./release.pub",
-      "output": "  백업 20261121T101156.211Z (DB 7428 바이트, 첨부 2개)\n  이미지 적재: images/harborline-app-v1.2.1.tar\n  적용: 0002_inquiry_state.sql\n  적용: 0003_assignee.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.1.0 → v1.2.1 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[fail] migrate  docker run --rm --network: exit status 1: harborline: 0004_reviewer.sql: ERROR: relation \"staff\" does not exist (SQLSTATE 42P01)\n[ok  ] rollback 이전 버전으로 복귀, 상태 점검 통과 (v1.1.0)\n판정: rolled_back — migrate 단계에서 실패해 v1.1.0 로 자동 복귀했습니다.\n",
+      "output": "  백업 20261121T103431.516Z (DB 7430 바이트, 첨부 2개)\n  이미지 적재: images/harborline-app-v1.2.1.tar\n  적용: 0002_inquiry_state.sql\n  적용: 0003_assignee.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.1.0 → v1.2.1 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[fail] migrate  docker run --rm --network: exit status 1: harborline: 0004_reviewer.sql: ERROR: relation \"staff\" does not exist (SQLSTATE 42P01)\n[ok  ] rollback 이전 버전으로 복귀, 상태 점검 통과 (v1.1.0)\n판정: rolled_back — migrate 단계에서 실패해 v1.1.0 로 자동 복귀했습니다.\n",
       "exit": 4
     }
   ],
   "TestBreakingSchemaFailureHaltsAndBackupRestoreRecovers": [
     {
       "cmd": "harborctl upgrade --bundle ./harborline-v2.0.0 --pubkey ./release.pub",
-      "output": "  백업 20261121T101203.009Z (DB 8514 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v2.0.0.tar\n  적용: 0003_drop_status.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.2.0 → v2.0.0 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[ok  ] migrate  마이그레이션 적용 (breaking)\n[ok  ] switch   새 버전으로 교체\n[fail] health   20초 안에 상태 점검을 통과하지 못함: docker exec hl-e2e-app /harborline: exit status 1: harborline: healthz 503\n[skip] rollback 스키마 변경이 호환되지 않음: 자동 롤백 없이 정지하고 백업 복구를 안내함\n판정: halted — health 단계 실패(20초 안에 상태 점검을 통과하지 못함: docker exec hl-e2e-app /harborline: exit status 1: harborline: healthz 503). 서비스를 멈춘 상태로 두었습니다. `harborctl restore` 로 직전 백업을 복구하세요.\n",
+      "output": "  백업 20261121T103438.346Z (DB 8512 바이트, 첨부 3개)\n  이미지 적재: images/harborline-app-v2.0.0.tar\n  적용: 0003_drop_status.sql\n[ok  ] verify   서명과 파일 체크섬 일치\n[ok  ] gate     v1.2.0 → v2.0.0 가능\n[ok  ] backup   DB·설정·첨부 백업 완료\n[ok  ] load     컨테이너 이미지 적재\n[ok  ] migrate  마이그레이션 적용 (breaking)\n[ok  ] switch   새 버전으로 교체\n[fail] health   20초 안에 상태 점검을 통과하지 못함: docker exec hl-e2e-app /harborline: exit status 1: harborline: healthz 503\n[skip] rollback 스키마 변경이 호환되지 않음: 자동 롤백 없이 정지하고 백업 복구를 안내함\n판정: halted — health 단계 실패(20초 안에 상태 점검을 통과하지 못함: docker exec hl-e2e-app /harborline: exit status 1: harborline: healthz 503). 서비스를 멈춘 상태로 두었습니다. `harborctl restore` 로 직전 백업을 복구하세요.\n",
       "exit": 5
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "cmd": "harborctl restore --backup latest",
-      "output": "복구: 백업 20261121T101203.009Z (버전 v1.2.0)\n복구 완료: v1.2.0 상태 점검 통과\n",
+      "output": "복구: 백업 20261121T103438.346Z (버전 v1.2.0)\n복구 완료: v1.2.0 상태 점검 통과\n",
       "exit": 0
     }
   ],
@@ -89,19 +89,19 @@
   "TestBackupAndRestoreReturnsDataAndAttachmentsToTheSnapshot": [
     {
       "cmd": "harborctl backup",
-      "output": "  백업 20261121T101306.403Z (DB 8636 바이트, 첨부 4개)\n백업 id: 20261121T101306.403Z\n",
+      "output": "  백업 20261121T103544.824Z (DB 8642 바이트, 첨부 4개)\n백업 id: 20261121T103544.824Z\n",
       "exit": 0
     },
     {
       "cmd": "harborctl restore --backup latest",
-      "output": "복구: 백업 20261121T101306.403Z (버전 v1.2.0)\n복구 완료: v1.2.0 상태 점검 통과\n",
+      "output": "복구: 백업 20261121T103544.824Z (버전 v1.2.0)\n복구 완료: v1.2.0 상태 점검 통과\n",
       "exit": 0
     }
   ],
   "TestDoctorPassesOnHealthyInstallIncludingPrivateCAChain": [
     {
       "cmd": "harborctl doctor",
-      "output": "[ok  ] 컨테이너 런타임                     docker 데몬 응답\n[ok  ] 디스크                          남은 11.7GB (필요 1GB)\n[ok  ] 인증서 ca.pem                   인증서 1개, 모두 30일 넘게 유효\n[ok  ] DB 접속                        pg_isready 통과\n[ok  ] 시각                           호스트와 DB 서버 시각 차이 0.3초\n[ok  ] TLS smtp.corp.test:587       ok: STARTTLS 인증서 체인 검증 통과\n",
+      "output": "[ok  ] 컨테이너 런타임                     docker 데몬 응답\n[ok  ] 디스크                          남은 11.6GB (필요 1GB)\n[ok  ] 인증서 ca.pem                   인증서 1개, 모두 30일 넘게 유효\n[ok  ] DB 접속                        pg_isready 통과\n[ok  ] 시각                           호스트와 DB 서버 시각 차이 0.1초\n[ok  ] TLS smtp.corp.test:587       ok: STARTTLS 인증서 체인 검증 통과\n",
       "exit": 0
     }
   ]

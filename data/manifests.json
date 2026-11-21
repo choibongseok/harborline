@@ -7,7 +7,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.0.0.tar",
-        "sha256": "171f6278ad40c606d8c82f87503cbe3f159e68c57554857ae22dc73af2ce43be"
+        "sha256": "5b0cc96462de3d4f940210a0c33f7a8e3e2943b35af8d67dd6ae994ac03318a1"
       },
       {
         "path": "images/postgres-16-alpine.tar",
@@ -30,7 +30,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.1.0.tar",
-        "sha256": "4905aab85fd93a4faff2e046b0e1f18a582a9912a3865cda157fa8d00311508d"
+        "sha256": "1661c42f75b50b1b30072aff782c01a8c110cc7ac281207c88660e19c6ff6226"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -49,7 +49,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.1.1.tar",
-        "sha256": "35310d6942ca6f3b578f736e49d46dbcca31dffaeb61654a112bc528822869e6"
+        "sha256": "145e73cce5df8e789aa0f5e8fd4163adb0f44261552f8ef5795a38b766126c22"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -68,7 +68,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.2.0.tar",
-        "sha256": "4e6eacd6c18d5fd79cc0842b7377a0272895e2fb92e32eaacc3f1a6b4e8a90d7"
+        "sha256": "76d15558543fdc1778267165fb317a78e06fefe0729f1537890edf75358e2e56"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -91,7 +91,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.2.1.tar",
-        "sha256": "ba24756d8c14510d8d21d89fe913560c2efc190b30ee203832dc36f43190f563"
+        "sha256": "4254d27b30ec99a159d9cccd45ec1d55a2a76939a452dc437bd87b8cbb0e790b"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -122,7 +122,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.2.2.tar",
-        "sha256": "541e4588f22157ceb426c86b1e2eef9c157b0fc4137937a1b9460e48276cf20d"
+        "sha256": "6640d3f49320fc8cb7338e5b9d23c81247277cfa82c428040da78a8311c116e3"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -145,7 +145,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.2.3.tar",
-        "sha256": "cac479d0432138fc13220007594ce554a44e6193b211b34f63c89711f62c1f33"
+        "sha256": "51a4d82c8e6304c358ef4097194ea908069d8366af16894b9fb045b6c8e14a59"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -168,7 +168,7 @@
     "files": [
       {
         "path": "images/harborline-app-v1.4.0.tar",
-        "sha256": "df2ffb71a32d7a5a759cf52c5dacb3489bd36273a411fc80f9ea4a2c89d7ba4a"
+        "sha256": "93f0c09fcb351b8d388621c37703889d03f8a0f6d9c687d7f16decbfb6eb9277"
       },
       {
         "path": "migrations/0001_init.sql",
@@ -191,7 +191,7 @@
     "files": [
       {
         "path": "images/harborline-app-v2.0.0.tar",
-        "sha256": "1ee66f057a38c32772c750f07db8d7e2a027a8beeebd425797aa6707f0bbdce4"
+        "sha256": "64b2cbdca87b17168083904c088184b561f67b96dd338c7fedb53c2090ba9530"
       },
       {
         "path": "migrations/0001_init.sql",
