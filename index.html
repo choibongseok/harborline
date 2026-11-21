@@ -17,14 +17,23 @@
 </header>
 
 <main class="grid">
+  <section class="panel hero" aria-labelledby="h-hero">
+    <h1 id="h-hero">인터넷이 없는 고객사 서버에 새 버전을 올릴 때, 잘못되면 어떻게 되돌리는지 보여 주는 데모입니다.</h1>
+    <p class="lead">일부러 고장을 내 보면서, 업그레이드 도구가 "계속할지 · 되돌릴지 · 멈출지"를 어떻게 정하는지 확인합니다.</p>
+    <div class="hero-btns">
+      <button id="tour-start" class="primary" type="button">설명 따라가기</button>
+      <button id="tour-skip" class="ghost2" type="button">직접 해 보기</button>
+    </div>
+  </section>
+
   <section class="panel controls" aria-labelledby="h-scn">
-    <h2 id="h-scn" class="ptitle">시나리오 변수</h2>
+    <h2 id="h-scn" class="ptitle">시나리오 고르기</h2>
     <div class="presets" role="group" aria-label="미리 정해 둔 시나리오" id="presets"></div>
     <div class="vars">
       <div class="var"><label for="current">현재 설치 버전</label><select id="current"></select></div>
       <div class="var"><label for="target">올릴 릴리스(번들)</label><select id="target"></select></div>
       <fieldset class="var failset">
-        <legend>실패 주입</legend>
+        <legend>일부러 고장 내 보기 (실패 주입)</legend>
         <label class="radio"><input type="radio" name="fail" value="none" checked> 없음</label>
         <label class="radio"><input type="radio" name="fail" value="badSignature"> 서명 불일치 <span class="tag">verify</span></label>
         <label class="radio"><input type="radio" name="fail" value="badChecksum"> 이미지 변조(체크섬) <span class="tag">verify</span></label>
@@ -79,7 +88,42 @@
       <pre id="manifest" class="term"></pre>
     </div>
   </section>
+  <details class="panel glossary" id="glossary">
+    <summary>어려운 말 풀이</summary>
+    <dl>
+      <dt>번들</dt><dd>설치에 필요한 파일(프로그램 이미지, DB 변경 파일, 목차)을 한 묶음으로 만든 것입니다. 이동식 저장장치 등으로 옮겨 설치합니다.</dd>
+      <dt>매니페스트</dt><dd>번들의 목차입니다. 버전, 올릴 수 있는 최소 버전(min_from), DB 구조 변경의 종류, 파일마다의 지문(SHA-256)이 적혀 있습니다.</dd>
+      <dt>서명</dt><dd>목차에 찍는 전자 도장입니다. 도장이 맞지 않으면 만든 쪽이 아닌 누군가 바꾼 파일입니다.</dd>
+      <dt>체크섬</dt><dd>파일 내용에서 계산한 지문입니다. 파일이 한 바이트만 바뀌어도 달라집니다.</dd>
+      <dt>스키마 변경</dt><dd>DB 표의 구조(컬럼·테이블)를 바꾸는 일입니다. none = 바꾸지 않음, compatible = 이전 버전도 쓸 수 있게 바꿈, breaking = 이전 버전이 못 쓸 수 있게 바꿈.</dd>
+      <dt>expand → contract</dt><dd>구조 변경을 "먼저 추가만"(expand) 하고, 앱이 옛 구조를 더 쓰지 않게 된 다음 릴리스에서 "정리"(contract) 하는 방식입니다. 그 사이에는 이전 버전도 동작합니다.</dd>
+      <dt>상태 점검 (health)</dt><dd>새 버전이 실제로 요청에 응답하는지 확인하는 것입니다.</dd>
+      <dt>자동 복귀 (롤백)</dt><dd>앱을 이전 버전으로 되돌리는 것입니다. 데이터를 되돌리는 것이 아닙니다.</dd>
+      <dt>백업 복구 (restore)</dt><dd>업그레이드 직전에 만든 사본으로 DB와 첨부 파일을 되돌리는 것입니다.</dd>
+      <dt>격리 네트워크</dt><dd>바깥으로 나가는 길이 없는 네트워크입니다. 실제 실행 기록은 이 안에서 만들었습니다.</dd>
+      <dt>실패 주입</dt><dd>일부러 고장을 내서 도구가 어떻게 판단하는지 보는 것입니다.</dd>
+    </dl>
+  </details>
 </main>
+
+<aside id="tour" class="tour" aria-label="설명 따라가기" hidden>
+  <div class="tour-head">
+    <span id="tour-prog" class="mono"></span>
+    <button id="tour-collapse" class="ghost2" type="button">접기</button>
+  </div>
+  <div id="tour-body" aria-live="polite" aria-atomic="true">
+    <h2 id="tour-title" tabindex="-1"></h2>
+    <div id="tour-text"></div>
+    <p id="tour-look" class="look"></p>
+  </div>
+  <div class="tour-nav">
+    <button id="tour-prev" class="ghost2" type="button">이전</button>
+    <button id="tour-next" class="primary" type="button">다음</button>
+    <button id="tour-auto" class="ghost2" type="button" aria-pressed="false">자동 진행 켜기</button>
+  </div>
+  <p class="hint" id="tour-keys">← → 키로도 넘길 수 있습니다.</p>
+</aside>
+<button id="tour-open" class="tour-reopen" type="button" hidden>설명 보기</button>
 
 <footer>
   <span>외부 요청 없음: 글꼴·스크립트·데이터 모두 이 사이트 안의 파일입니다.</span>
