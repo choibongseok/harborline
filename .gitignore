@@ -1,0 +1,7 @@
+/dist/
+/build/
+*.test
+.DS_Store
+web/node_modules/
+web/dist/
+.test-results/
