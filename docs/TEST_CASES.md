@@ -142,8 +142,8 @@
 | PRX-002 | 프록시·사설 CA(격리 네트워크) | 프록시의 사설 CA 를 모르면 호출이 막힌다 | CA 미지정 | mailed=false, 프록시엔 도달, 외부엔 미도달 | `test/e2e/proxy_test.go::TestProxyTLSInterceptionFailsClosedWithoutThePrivateCA` | e2e |
 | WEB-001 | 데모 사이트(브라우저) | WASM 기동과 기본 결과 | 페이지 열기 | 자동 복귀 결과, 8단계, 상시 배너, 콘솔 오류 0 | `web/e2e/demo.spec.ts::판정 엔진(WebAssembly)이 뜨고 기본 시나리오 결과가 나오며 콘솔 오류가 없다` | e2e |
 | WEB-002 | 데모 사이트(브라우저) | 정상 시나리오 | 정상적으로 올라감 | 종료 코드 0, migrate SKIP, health OK | `web/e2e/demo.spec.ts::정상 업그레이드: 스키마 변경이 없으면 마이그레이션을 건너뛰고 성공한다` | e2e |
-| WEB-003 | 데모 사이트(브라우저) | 자동 복귀 시나리오 | 새 버전이 안 뜸 시나리오 | 종료 코드 4, health FAIL, rollback OK | `web/e2e/demo.spec.ts::상태 점검 실패: 스키마 변경이 없으면 이전 버전으로 자동 복귀한다` | e2e |
-| WEB-004 | 데모 사이트(브라우저) | 정지 시나리오 | DB 구조가 바뀜 + 실패 시나리오 | 종료 코드 5, harborctl restore 안내, rollback SKIP | `web/e2e/demo.spec.ts::호환되지 않는 스키마 변경이 실패하면 자동 복귀 없이 정지하고 복구를 안내한다` | e2e |
+| WEB-003 | 데모 사이트(브라우저) | 자동 복귀 시나리오 | 새 버전이 안 뜨는 상황 | 종료 코드 4, health FAIL, rollback OK | `web/e2e/demo.spec.ts::상태 점검 실패: 스키마 변경이 없으면 이전 버전으로 자동 복귀한다` | e2e |
+| WEB-004 | 데모 사이트(브라우저) | 정지 시나리오 | DB 구조가 바뀐 릴리스가 실패하는 상황 | 종료 코드 5, harborctl restore 안내, rollback SKIP | `web/e2e/demo.spec.ts::호환되지 않는 스키마 변경이 실패하면 자동 복귀 없이 정지하고 복구를 안내한다` | e2e |
 | WEB-005 | 데모 사이트(브라우저) | 건너뛴 버전 시나리오 | v1.0.0 → v1.4.0 | gate FAIL, backup 미실행 | `web/e2e/demo.spec.ts::건너뛴 버전은 게이트에서 거부되고 백업도 만들지 않는다` | e2e |
 | WEB-006 | 데모 사이트(브라우저) | 검증 거부 시나리오 | 서명 불일치, 이미지 변조 | verify 단계 거부, 종료 코드 2 | `web/e2e/demo.spec.ts::서명 불일치와 이미지 변조는 검증 단계에서 거부된다` | e2e |
 | WEB-007 | 데모 사이트(브라우저) | 수동 조작 | 버전 선택과 실패 주입 라디오 | 판정 갱신, 시나리오 버튼 선택 해제 | `web/e2e/demo.spec.ts::직접 고른 버전과 실패 주입이 판정에 반영되고 시나리오 선택 표시가 풀린다` | e2e |

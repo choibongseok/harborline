@@ -15,7 +15,7 @@ const start = (page: Page) => page.getByRole('button', { name: '설명 따라가
 test('첫 화면에 한 문장 설명과 두 버튼이 있고, 이미 본 방문자에게는 설명 패널이 닫혀 있다', async ({ page }) => {
   await open(page);
   await expect(page.locator('h1')).toHaveText('온프렘용 모의 업그레이드');
-  await expect(page.locator('.hero .sub')).toContainText('잘못되면 어떻게 되돌리는지 보여 주는 데모');
+  await expect(page.locator('.hero .sub')).toContainText('새 버전을 올리는 도구를 만들었습니다');
   await expect(page).toHaveTitle('온프렘용 모의 업그레이드 — Harborline');
   await expect(start(page)).toBeVisible();
   await expect(page.getByRole('button', { name: '직접 해 보기' })).toBeVisible();
@@ -43,7 +43,7 @@ test('설명 따라가기: 장을 넘기면 해당 시나리오가 자동 실행
   await page.getByRole('button', { name: '다음', exact: true }).click();
   await expect(page.locator('#decision')).toContainText('시작하지 않았습니다');
   await page.getByRole('button', { name: '다음', exact: true }).click();
-  await expect(page.locator('#tour-title')).toContainText('진짜 코드');
+  await expect(page.locator('#tour-title')).toContainText('실제 도구의 코드');
   await expect(page.locator('#tour-next')).toHaveText('마치기');
   await page.locator('#tour-next').click();
   await expect(tour(page)).toBeHidden();

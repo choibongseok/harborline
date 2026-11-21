@@ -16,7 +16,7 @@ test('판정 엔진(WebAssembly)이 뜨고 기본 시나리오 결과가 나오�
   const errors = await open(page);
   await expect(page.locator('#decision')).toContainText('자동 복귀');
   await expect(page.locator('#timeline li')).toHaveCount(8);
-  await expect(page.locator('.banner')).toContainText('판정 로직만 실제 코드');
+  await expect(page.locator('.banner')).toContainText('실제 도구와 같은 코드');
   expect(errors).toEqual([]);
 });
 
@@ -32,7 +32,7 @@ test('정상 업그레이드: 스키마 변경이 없으면 마이그레이션�
 
 test('상태 점검 실패: 스키마 변경이 없으면 이전 버전으로 자동 복귀한다', async ({ page }) => {
   await open(page);
-  await preset(page, '새 버전이 안 뜸').click();
+  await preset(page, '새 버전이 안 뜨면').click();
   await expect(page.locator('#decision')).toContainText('자동 복귀');
   await expect(page.locator('#decision')).toContainText('종료 코드 4');
   await expect(stage(page, 'health').locator('.chip')).toHaveText('FAIL');
@@ -42,7 +42,7 @@ test('상태 점검 실패: 스키마 변경이 없으면 이전 버전으로 �
 
 test('호환되지 않는 스키마 변경이 실패하면 자동 복귀 없이 정지하고 복구를 안내한다', async ({ page }) => {
   await open(page);
-  await preset(page, 'DB 구조가 바뀜 + 실패').click();
+  await preset(page, 'DB 구조가 바뀐 릴리스가 실패').click();
   await expect(page.locator('#decision')).toContainText('정지 후 복구');
   await expect(page.locator('#decision')).toContainText('종료 코드 5');
   await expect(page.locator('#decision')).toContainText('harborctl restore');
@@ -74,7 +74,7 @@ test('직접 고른 버전과 실패 주입이 판정에 반영되고 시나리�
   await expect(preset(page, '정상적으로 올라감')).toHaveAttribute('aria-pressed', 'true');
   await page.locator('#current').selectOption('v1.2.0');
   await page.locator('#target').selectOption('v2.0.0');
-  await page.getByLabel('마이그레이션 실패').check();
+  await page.getByLabel('DB 변경 단계 실패').check();
   await expect(preset(page, '정상적으로 올라감')).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('#decision')).toContainText('정지 후 복구');
   await expect(stage(page, 'migrate').locator('.chip')).toHaveText('FAIL');
@@ -86,17 +86,17 @@ test('직접 고른 버전과 실패 주입이 판정에 반영되고 시나리�
 
 test('실제 e2e 터미널 출력 탭이 해당 시나리오의 harborctl 실행 기록을 보여 준다', async ({ page }) => {
   await open(page);
-  await preset(page, '새 버전이 안 뜸').click();
+  await preset(page, '새 버전이 안 뜨면').click();
   await expect(page.locator('#p-term')).toContainText('harborctl upgrade --bundle ./harborline-v1.1.1');
   await expect(page.locator('#p-term')).toContainText('이전 버전으로 복귀, 상태 점검 통과');
   await expect(page.locator('#p-term')).toContainText('(종료 코드 4)');
-  await preset(page, 'DB 구조가 바뀜 + 실패').click();
+  await preset(page, 'DB 구조가 바뀐 릴리스가 실패').click();
   await expect(page.locator('#p-term')).toContainText('harborctl restore');
 });
 
 test('LLM 호환성 표가 실제 실행 결과 파일의 모든 프로필을 보여 준다', async ({ page }) => {
   await open(page);
-  await page.getByRole('tab', { name: 'LLM 호환성 표' }).click();
+  await page.getByRole('tab', { name: 'AI 모델 서버별 동작 표' }).click();
   await expect(page.locator('#llm tbody tr')).toHaveCount(6);
   await expect(page.locator('#llm')).toContainText('prompt_json');
   await expect(page.locator('#llm')).toContainText('chunked');
@@ -105,7 +105,7 @@ test('LLM 호환성 표가 실제 실행 결과 파일의 모든 프로필을 �
 
 test('마이그레이션 규약 검사기가 위반을 잡고 고치면 통과한다', async ({ page }) => {
   await open(page);
-  await page.getByRole('tab', { name: '마이그레이션 규약 검사' }).click();
+  await page.getByRole('tab', { name: 'DB 변경 파일 검사' }).click();
   await expect(page.locator('#lint-out')).toContainText('expand-drop-column');
   await expect(page.locator('#lint-out')).toContainText('expand-add-not-null-without-default');
   await page.locator('#sql').fill('-- release: v1.3.0\n-- phase: expand\nALTER TABLE inquiries ADD COLUMN channel text NOT NULL DEFAULT \'web\';\n');
@@ -116,11 +116,11 @@ test('마이그레이션 규약 검사기가 위반을 잡고 고치면 통과�
 
 test('키보드: 탭을 화살표로 옮기고 포커스 윤곽이 보이며 테마 전환이 동작한다', async ({ page }) => {
   await open(page);
-  await page.getByRole('tab', { name: '실제 e2e 터미널 출력' }).focus();
+  await page.getByRole('tab', { name: '도구를 실제로 실행한 화면' }).focus();
   await page.keyboard.press('ArrowRight');
-  await expect(page.getByRole('tab', { name: 'LLM 호환성 표' })).toBeFocused();
+  await expect(page.getByRole('tab', { name: 'AI 모델 서버별 동작 표' })).toBeFocused();
   await expect(page.locator('#p-llm')).toBeVisible();
-  const outline = await page.getByRole('tab', { name: 'LLM 호환성 표' }).evaluate((e) => getComputedStyle(e).outlineStyle);
+  const outline = await page.getByRole('tab', { name: 'AI 모델 서버별 동작 표' }).evaluate((e) => getComputedStyle(e).outlineStyle);
   expect(outline).not.toBe('none');
   expect(await page.locator('html').getAttribute('data-theme')).toBeTruthy();
   const before = await page.locator('html').getAttribute('data-theme');
