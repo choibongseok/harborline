@@ -311,16 +311,17 @@ function tourGo(i, scroll = true) {
   }
   tourTimer();
 }
-function tourOpen(i = tour.i, focus = false) {
+function tourOpen(i = tour.i, focus = false, scroll = true) {
   tour.open = true;
   $('tour').hidden = false;
   $('tour-open').hidden = true;
   document.body.classList.add('tour-open');
   syncSheet();
-  tourGo(i);
+  tourGo(i, scroll);
   if (focus) $('tour-title').focus({ preventScroll: true });
 }
 function tourCollapse() {
+  tourRemember();
   tour.open = false;
   clearTimeout(tour.timer);
   $('tour').hidden = true;
@@ -328,7 +329,19 @@ function tourCollapse() {
   document.body.classList.remove('tour-open');
   document.documentElement.style.removeProperty('--sheet-h');
 }
+// 설명을 봤는지만 쿠키 하나에 기억한다(식별 정보 없음). 쿠키를 못 쓰면 매번 처음 방문처럼 동작한다.
+const COOKIE = 'hl_tour';
+function tourSeen() {
+  try { return document.cookie.split('; ').some((c) => c === `${COOKIE}=seen`); } catch { return false; }
+}
+function tourRemember() {
+  try {
+    const dir = location.pathname.replace(/[^/]*$/, '') || '/';
+    document.cookie = `${COOKIE}=seen; path=${dir}; max-age=15552000; SameSite=Lax`;
+  } catch { /* 쿠키 차단: 기억하지 못할 뿐 동작은 같다 */ }
+}
 function tourFinish() {
+  tourRemember();
   tour.i = 0;
   setHighlights([]);
   tourCollapse();
@@ -388,5 +401,7 @@ async function main() {
   if (!wasmReady) { $('decision').textContent = '판정 엔진을 불러오지 못했습니다.'; return; }
   applyPreset(PRESETS[2]);
   lint();
+  if (!tourSeen()) tourOpen(0, false, false); // 저절로 열 때는 화면을 옮기지 않는다(첫 화면 보존)
+  else $('tour-open').hidden = false;
 }
 main();

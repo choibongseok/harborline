@@ -1,9 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 
-async function open(page: Page, query = '') {
+async function open(page: Page, query = '', seen = true) {
   const errors: string[] = [];
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('pageerror', (e) => errors.push(String(e)));
+  if (seen) await page.context().addCookies([{ name: 'hl_tour', value: 'seen', url: 'http://127.0.0.1:4173/harborline/' }]);
   await page.goto(`./${query}`);
   await expect(page.locator('body[data-ready="true"]')).toBeVisible({ timeout: 15_000 });
   return errors;
@@ -11,7 +12,7 @@ async function open(page: Page, query = '') {
 const tour = (page: Page) => page.locator('#tour');
 const start = (page: Page) => page.getByRole('button', { name: '설명 따라가기' });
 
-test('첫 화면에 한 문장 설명과 두 버튼이 있고 설명 패널은 닫혀 있다', async ({ page }) => {
+test('첫 화면에 한 문장 설명과 두 버튼이 있고, 이미 본 방문자에게는 설명 패널이 닫혀 있다', async ({ page }) => {
   await open(page);
   await expect(page.locator('h1')).toContainText('잘못되면 어떻게 되돌리는지 보여 주는 데모');
   await expect(start(page)).toBeVisible();
@@ -109,4 +110,64 @@ test('모바일 폭에서 설명 시트가 본문 끝과 강조된 곳을 가리
   expect(footer).toBeLessThanOrEqual(await sheetTop() + 1);
   const w = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
   expect(w.sw).toBeLessThanOrEqual(w.cw);
+});
+
+test('처음 온 방문자에게는 설명 패널이 1장부터 저절로 열리고 포커스를 빼앗지 않는다', async ({ page }) => {
+  const errors = await open(page, '', false);
+  await expect(tour(page)).toBeVisible();
+  await expect(page.locator('#tour-prog')).toHaveText('1/7');
+  await expect(page.locator('#tour-title')).toContainText('인터넷이 없는 서버에 새 버전을 올리는 일');
+  await expect(page.locator('.controls')).toHaveClass(/tour-hl/);
+  const active = await page.evaluate(() => document.activeElement?.tagName);
+  expect(active).toBe('BODY');
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  expect(errors).toEqual([]);
+});
+
+test('설명을 접은 뒤 새로고침하면 저절로 열리지 않고, 버튼으로 다시 열 수 있다', async ({ page }) => {
+  await open(page, '', false);
+  await expect(tour(page)).toBeVisible();
+  await page.getByRole('button', { name: '접기' }).click();
+  await page.reload();
+  await expect(page.locator('body[data-ready="true"]')).toBeVisible({ timeout: 15_000 });
+  await expect(tour(page)).toBeHidden();
+  const cookies = await page.context().cookies();
+  const c = cookies.find((x) => x.name === 'hl_tour');
+  expect(c?.value).toBe('seen');
+  expect(c?.path).toBe('/harborline/');
+  expect(c?.sameSite).toBe('Lax');
+  await page.getByRole('button', { name: '설명 보기' }).click();
+  await expect(tour(page)).toBeVisible();
+});
+
+test('설명을 끝까지 본 뒤 새로고침하면 저절로 열리지 않는다', async ({ page }) => {
+  await open(page, '', false);
+  for (let i = 0; i < 6; i++) await page.getByRole('button', { name: '다음', exact: true }).click();
+  await page.locator('#tour-next').click();
+  await expect(tour(page)).toBeHidden();
+  await page.reload();
+  await expect(page.locator('body[data-ready="true"]')).toBeVisible({ timeout: 15_000 });
+  await expect(tour(page)).toBeHidden();
+});
+
+test('쿠키를 쓸 수 없어도 오류 없이 저절로 열린다', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(Document.prototype, 'cookie', { get() { throw new Error('blocked'); }, set() { throw new Error('blocked'); } });
+  });
+  const errors = await open(page, '', false);
+  await expect(tour(page)).toBeVisible();
+  await page.getByRole('button', { name: '접기' }).click();
+  await page.reload();
+  await expect(page.locator('body[data-ready="true"]')).toBeVisible({ timeout: 15_000 });
+  await expect(tour(page)).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('모바일 폭에서 저절로 열린 설명 시트가 첫 화면의 한 문장을 가리지 않는다', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await open(page, '', false);
+  await expect(tour(page)).toBeVisible();
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(() => ({ h1: document.querySelector('h1')!.getBoundingClientRect().bottom, sheet: document.getElementById('tour')!.getBoundingClientRect().top }));
+  expect(r.h1).toBeLessThan(r.sheet);
 });

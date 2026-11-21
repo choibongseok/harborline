@@ -4,6 +4,7 @@ async function open(page: Page) {
   const errors: string[] = [];
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('pageerror', (e) => errors.push(String(e)));
+  await page.context().addCookies([{ name: 'hl_tour', value: 'seen', url: 'http://127.0.0.1:4173/harborline/' }]);
   await page.goto('./');
   await expect(page.locator('body[data-ready="true"]')).toBeVisible({ timeout: 15_000 });
   return errors;
