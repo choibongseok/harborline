@@ -28,12 +28,21 @@ type Proxy struct {
 	CA *pki.CA
 	// Upstream 은 가로챈 요청을 보낼 http 주소(host:port). 비면 원래 목적지로 직접 보낸다.
 	Upstream string
-	mu       sync.Mutex
-	log      []Entry
-	certs    map[string]*tls.Certificate
+	// OnEntry 는 기록할 때마다 호출된다(선택).
+	OnEntry func(Entry)
+	mu      sync.Mutex
+	log     []Entry
+	certs   map[string]*tls.Certificate
 }
 
-func (p *Proxy) record(e Entry) { p.mu.Lock(); p.log = append(p.log, e); p.mu.Unlock() }
+func (p *Proxy) record(e Entry) {
+	p.mu.Lock()
+	p.log = append(p.log, e)
+	p.mu.Unlock()
+	if p.OnEntry != nil {
+		p.OnEntry(e)
+	}
+}
 
 // Log 는 기록 사본이다.
 func (p *Proxy) Log() []Entry {

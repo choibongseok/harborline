@@ -1,0 +1,32 @@
+# 고객 사이트 모의: 외부로 나가는 길이 없는 내부 네트워크(site) + 그 안의 SMTP·내부 모델 서버 + 외부 접속 시도 기록기(sinkhole).
+# 호스트에서 앱으로 들어오는 길은 gateway(리버스 프록시 모의) 하나뿐이다.
+name: hl-e2e-site
+services:
+  sinkhole:
+    image: harborline-tools:e2e
+    command: ["sinkhole", "--ip", "10.77.0.2"]
+    networks:
+      site: { ipv4_address: 10.77.0.2 }
+  smtp:
+    image: harborline-tools:e2e
+    command: ["mocksmtp", "--listen", ":587", "--cert", "/certs/smtp.pem", "--key", "/certs/smtp.key", "--require-tls"]
+    volumes: ["${HL_CERTS}:/certs:ro"]
+    networks:
+      site: { aliases: [smtp.corp.test] }
+  llm:
+    image: harborline-tools:e2e
+    command: ["mockllm", "--profile", "${HL_LLM_PROFILE:-full}", "--listen", ":8000"]
+    networks:
+      site: { aliases: [llm.corp.test] }
+  gateway:
+    image: harborline-tools:e2e
+    command: ["forward", "--listen", ":8080", "--to", "hl-e2e-app:8080"]
+    ports: ["127.0.0.1:58180:8080"]
+    networks: [site, edge]
+networks:
+  site:
+    name: hl-e2e-site
+    internal: true
+    ipam: { config: [{ subnet: 10.77.0.0/24, ip_range: 10.77.0.128/25 }] }
+  edge:
+    name: hl-e2e-edge

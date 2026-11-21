@@ -1,0 +1,4 @@
+# 시험용 고객 환경 모의(내부 모델 서버·SMTP·싱크홀·프록시) 이미지.
+FROM scratch
+COPY hltools /hltools
+ENTRYPOINT ["/hltools"]

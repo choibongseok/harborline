@@ -93,11 +93,14 @@ func Upgrade(ctx context.Context, current string, m Manifest, ex Executor) Resul
 	}
 	r.add(StageGate, "ok", g.Message)
 
-	if err := ex.Backup(ctx); err != nil {
+	if current == "" {
+		r.add(StageBackup, "skip", "신규 설치는 백업할 대상이 없음")
+	} else if err := ex.Backup(ctx); err != nil {
 		r.add(StageBackup, "fail", err.Error())
 		return fin(OutcomeAborted, "백업에 실패해 시작하지 않았습니다. 운영 중인 버전은 그대로입니다.")
+	} else {
+		r.add(StageBackup, "ok", "DB·설정·첨부 백업 완료")
 	}
-	r.add(StageBackup, "ok", "DB·설정·첨부 백업 완료")
 
 	if err := ex.LoadImages(ctx); err != nil {
 		r.add(StageLoad, "fail", err.Error())
@@ -107,7 +110,7 @@ func Upgrade(ctx context.Context, current string, m Manifest, ex Executor) Resul
 
 	var stepErr error
 	var failed Stage
-	if m.Schema == SchemaNone {
+	if m.Schema == SchemaNone && current != "" {
 		r.add(StageMigrate, "skip", "스키마 변경 없음")
 	} else if err := ex.Migrate(ctx); err != nil {
 		r.add(StageMigrate, "fail", err.Error())

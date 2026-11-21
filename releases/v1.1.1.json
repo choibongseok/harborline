@@ -1,0 +1,1 @@
+{"version":"v1.1.1","min_from":"v1.0.0","schema":"none","features":"stats","break":"health","note":"상태 점검이 실패하는 릴리스(자동 복귀 시험용)"}

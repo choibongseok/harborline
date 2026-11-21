@@ -25,6 +25,7 @@ type Server struct {
 	mails       []Mail
 	ln          net.Listener
 	Connections int
+	OnMail      func(Mail) // 메일을 받을 때마다 호출(선택)
 }
 
 // Listen 은 addr 에서 받기 시작한다.
@@ -117,6 +118,9 @@ func (s *Server) serve(c net.Conn) {
 			s.mu.Lock()
 			s.mails = append(s.mails, cur)
 			s.mu.Unlock()
+			if s.OnMail != nil {
+				s.OnMail(cur)
+			}
 			w("250 queued")
 		case cmd == "QUIT":
 			w("221 bye")

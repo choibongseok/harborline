@@ -1,0 +1,1 @@
+{"version":"v1.2.1","min_from":"v1.1.0","schema":"compatible","features":"stats,state","variant_migrations":true,"note":"두 번째 마이그레이션이 실패하는 릴리스(중간 실패 시험용)"}

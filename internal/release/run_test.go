@@ -98,3 +98,11 @@ func TestUpgradeFreshInstallFailureHaltsWithoutRollback(t *testing.T) {
 		t.Fatalf("신규 설치 실패는 되돌릴 버전이 없어 정지: %+v", r)
 	}
 }
+
+func TestUpgradeFreshInstallAlwaysMigratesAndSkipsBackup(t *testing.T) {
+	r, ex := run("", mf("v1.1.0", "v1.0.0", SchemaNone), Injection{})
+	calls := strings.Join(ex.Calls, ",")
+	if r.Outcome != OutcomeSuccess || !strings.Contains(calls, "migrate") || strings.Contains(calls, "backup") {
+		t.Fatalf("신규 설치는 스키마 변경이 없는 릴리스라도 전체 스키마를 만들어야 하고 백업은 건너뜀: %+v %v", r, ex.Calls)
+	}
+}
