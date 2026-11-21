@@ -2,7 +2,9 @@
 
 **라이브 데모: https://choibongseok.github.io/harborline/**
 
-![업그레이드 판정 시뮬레이터(다크)](docs/demo-desktop-dark.png)
+![업그레이드 판정 시뮬레이터(라이트)](docs/demo-desktop-light.png)
+
+![다크 테마](docs/demo-desktop-dark.png)
 
 <img src="docs/demo-mobile.png" alt="모바일 화면" width="260" />
 
