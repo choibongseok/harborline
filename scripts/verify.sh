@@ -25,12 +25,12 @@ go run ./cmd/hlbuild lint
 passed() { grep -c '"Action":"pass","Package":[^,]*,"Test":"Test[A-Za-z0-9_]*"' "$1" || true; }
 
 step "단위 테스트"
-go test -json -count=1 ./... > .test-results/unit.json || { grep -E '"Action":"fail"' .test-results/unit.json | head; exit 1; }
+go test -json -count=1 ./... > .test-results/unit.json || { node scripts/show-failures.mjs .test-results/unit.json; exit 1; }
 echo "통과한 단위 테스트: $(passed .test-results/unit.json)"
 
 step "통합 테스트(실제 PostgreSQL·OpenLDAP·Keycloak, STARTTLS SMTP, 모의 내부 모델 서버)"
 bash scripts/infra.sh
-go test -json -count=1 -tags integration ./test/integration > .test-results/integration.json || { grep -E '"Action":"fail"|_test.go' .test-results/integration.json | head -20; exit 1; }
+go test -json -count=1 -tags integration ./test/integration > .test-results/integration.json || { node scripts/show-failures.mjs .test-results/integration.json; exit 1; }
 echo "통과한 통합 테스트: $(passed .test-results/integration.json)"
 
 step "릴리스 번들 빌드(이미지 tar·마이그레이션·매니페스트·서명)"
@@ -40,7 +40,7 @@ cp deploy/Dockerfile.tools dist/build/tools/Dockerfile
 docker build -q -t harborline-tools:e2e dist/build/tools >/dev/null
 
 step "e2e(격리 네트워크에서 설치 → 업그레이드 → 실패 주입 → 롤백 → 백업·복구, 프록시·사설 CA)"
-go test -json -count=1 -tags e2e -timeout 40m ./test/e2e > .test-results/e2e.json || { grep -E '"Action":"fail"|_test.go' .test-results/e2e.json | head -20; exit 1; }
+go test -json -count=1 -tags e2e -timeout 40m ./test/e2e > .test-results/e2e.json || { node scripts/show-failures.mjs .test-results/e2e.json; exit 1; }
 echo "통과한 e2e 시나리오: $(passed .test-results/e2e.json)"
 
 step "LLM 호환성 표"

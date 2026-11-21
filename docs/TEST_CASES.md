@@ -6,10 +6,10 @@
 
 | 종류 | 개수 | 실행 |
 |---|---|---|
-| unit (판정 로직·어댑터·설정·번들 검사·호환성 표) | 86 | `make test-unit` |
+| unit (판정 로직·어댑터·설정·번들 검사·호환성 표) | 87 | `make test-unit` |
 | integration (실제 PG·LDAP·Keycloak, STARTTLS SMTP) | 19 | `make test-int` |
 | e2e (격리 네트워크 설치·업그레이드·복구·프록시 / 데모 사이트 브라우저) | 46 | `make e2e`, `make verify` |
-| **합계** | **151** | `make verify` |
+| **합계** | **152** | `make verify` |
 
 | ID | 영역 | 시나리오 | 입력/조건 | 기대 결과 | 자동화 테스트 | 종류 |
 |---|---|---|---|---|---|---|
@@ -57,6 +57,7 @@
 | CTL-003 | harborctl 실행부 | CA 파일의 유효·임박·만료를 구분한다 | 90일, 10일 남음, 만료, 없는 파일 | ok / warn / fail / fail | `internal/ctl/ctl_test.go::TestCheckCAFileClassifiesValidWarnAndExpired` | unit |
 | CTL-004 | harborctl 실행부 | 첨부 백업 아카이브 왕복과 경로 이탈 거부 | 정상 파일, ../ 항목이 든 아카이브 | 내용 동일 복원, 이탈은 오류 | `internal/ctl/ctl_test.go::TestAttachmentArchiveRoundTripAndRejectsPathEscape` | unit |
 | CTL-005 | harborctl 실행부 | 설정·상태 저장과 비밀 값 생성 | 비밀 값이 빈 설정 저장 | 16자 이상 비밀 생성, 기본값 채움, 상태 왕복 | `internal/ctl/ctl_test.go::TestStateAndConfigPersistWithGeneratedSecrets` | unit |
+| CTL-006 | harborctl 실행부 | DB 상태 점검은 TCP 로 묻는다 | 생성된 compose 의 db healthcheck | pg_isready -h 127.0.0.1 (소켓 전용 임시 서버 단계에서 통과해 마이그레이션이 간헐 실패하는 것을 막음) | `internal/ctl/ctl_test.go::TestComposeDatabaseHealthcheckAsksOverTCP` | unit |
 | BLD-001 | 번들 빌드 검사 | 규약을 어긴 마이그레이션은 번들 빌드 전에 걸린다 | expand 안의 DROP COLUMN | 규약 위반 오류 | `cmd/hlbuild/main_test.go::TestBuildStopsWhenAnExpandMigrationBreaksTheOldVersion` | unit |
 | BLD-002 | 번들 빌드 검사 | 선언한 schema 가 계산값과 다르면 거부한다 | 변경이 있는데 none 선언 | 오류 | `cmd/hlbuild/main_test.go::TestBuildStopsWhenDeclaredSchemaDiffersFromMigrations` | unit |
 | BLD-003 | 번들 빌드 검사 | 규약을 지킨 릴리스는 통과한다 | CREATE TABLE 만 있는 expand | 통과 | `cmd/hlbuild/main_test.go::TestLintPassesForCompliantRelease` | unit |

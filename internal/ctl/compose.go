@@ -23,7 +23,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harborline -d harborline"]
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U harborline -d harborline"]
       interval: 2s
       timeout: 3s
       retries: 30

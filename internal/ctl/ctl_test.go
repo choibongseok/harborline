@@ -128,3 +128,15 @@ func TestStateAndConfigPersistWithGeneratedSecrets(t *testing.T) {
 		t.Fatal("설정이 없으면 오류")
 	}
 }
+
+// 최초 기동 때 postgres 는 소켓 전용 임시 서버를 먼저 띄운다. 소켓으로 묻는 점검은 이때 이미 통과해서,
+// 곧바로 TCP 로 붙는 마이그레이션이 간헐적으로 "connection refused" 로 실패한다(재현: 15회 중 6회). TCP 로 점검해야 한다.
+func TestComposeDatabaseHealthcheckAsksOverTCP(t *testing.T) {
+	b, err := RenderCompose(sampleConfig(), "v1.0.0", "/a")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(b), "pg_isready -h 127.0.0.1 ") {
+		t.Fatalf("DB 상태 점검이 TCP(127.0.0.1)로 물어야 함:\n%s", b)
+	}
+}
