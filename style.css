@@ -141,7 +141,8 @@ footer a { color: var(--blue); }
 
 /* 첫 화면·설명 따라가기 */
 .hero { grid-column: 1 / -1; }
-.hero h1 { margin: 0; font-size: 24px; line-height: 1.4; color: var(--strong); font-weight: 700; }
+.hero h1 { margin: 0; font-size: 28px; line-height: 1.3; color: var(--strong); font-weight: 700; }
+.hero .sub { margin: 6px 0 0; font-size: 16px; color: var(--text); }
 .hero .lead { margin: 8px 0 14px; color: var(--muted); font-size: 15px; }
 .hero-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .hero-btns .primary, .tour-nav .primary { margin: 0; align-self: auto; }
@@ -184,7 +185,7 @@ footer a { color: var(--blue); }
   .tour-reopen { bottom: 12px; right: 12px; }
 }
 @media (max-width: 600px) {
-  .hero h1 { font-size: 20px; }
+  .hero h1 { font-size: 24px; }
   .glossary dl { grid-template-columns: 1fr; }
   .glossary dt { margin-top: 6px; }
 }
