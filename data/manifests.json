@@ -1,0 +1,213 @@
+[
+  {
+    "name": "harborline",
+    "version": "v1.0.0",
+    "min_from": "v0.0.0",
+    "schema": "compatible",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.0.0.tar",
+        "sha256": "171f6278ad40c606d8c82f87503cbe3f159e68c57554857ae22dc73af2ce43be"
+      },
+      {
+        "path": "images/postgres-16-alpine.tar",
+        "sha256": "6c063eb4edc6aa004ed8ab81265f2407998f53770f018a53f81e5d8b4cd6ebbe"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      }
+    ],
+    "note": "",
+    "break": "",
+    "tamper": ""
+  },
+  {
+    "name": "harborline",
+    "version": "v1.1.0",
+    "min_from": "v1.0.0",
+    "schema": "none",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.1.0.tar",
+        "sha256": "4905aab85fd93a4faff2e046b0e1f18a582a9912a3865cda157fa8d00311508d"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      }
+    ],
+    "note": "",
+    "break": "",
+    "tamper": ""
+  },
+  {
+    "name": "harborline",
+    "version": "v1.1.1",
+    "min_from": "v1.0.0",
+    "schema": "none",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.1.1.tar",
+        "sha256": "35310d6942ca6f3b578f736e49d46dbcca31dffaeb61654a112bc528822869e6"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      }
+    ],
+    "note": "상태 점검이 실패하는 릴리스(자동 복귀 시험용)",
+    "break": "health",
+    "tamper": ""
+  },
+  {
+    "name": "harborline",
+    "version": "v1.2.0",
+    "min_from": "v1.0.0",
+    "schema": "compatible",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.2.0.tar",
+        "sha256": "4e6eacd6c18d5fd79cc0842b7377a0272895e2fb92e32eaacc3f1a6b4e8a90d7"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      },
+      {
+        "path": "migrations/0002_inquiry_state.sql",
+        "sha256": "edc37140cc051b5b7be627b4a3908e0c8ca226e7c7a5961bc96fd13392225290"
+      }
+    ],
+    "note": "",
+    "break": "",
+    "tamper": ""
+  },
+  {
+    "name": "harborline",
+    "version": "v1.2.1",
+    "min_from": "v1.1.0",
+    "schema": "compatible",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.2.1.tar",
+        "sha256": "ba24756d8c14510d8d21d89fe913560c2efc190b30ee203832dc36f43190f563"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      },
+      {
+        "path": "migrations/0002_inquiry_state.sql",
+        "sha256": "edc37140cc051b5b7be627b4a3908e0c8ca226e7c7a5961bc96fd13392225290"
+      },
+      {
+        "path": "migrations/0003_assignee.sql",
+        "sha256": "23b12060c6f46b8b5834780e450374855835409ba7d135e66296f5fc57ed9143"
+      },
+      {
+        "path": "migrations/0004_reviewer.sql",
+        "sha256": "5931a4eda7aeffba98abfc63412563221e727306b1ad14df3efe6c37fc8b3ae1"
+      }
+    ],
+    "note": "두 번째 마이그레이션이 실패하는 릴리스(중간 실패 시험용)",
+    "break": "",
+    "tamper": ""
+  },
+  {
+    "name": "harborline",
+    "version": "v1.2.2",
+    "min_from": "v1.2.0",
+    "schema": "none",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.2.2.tar",
+        "sha256": "541e4588f22157ceb426c86b1e2eef9c157b0fc4137937a1b9460e48276cf20d"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      },
+      {
+        "path": "migrations/0002_inquiry_state.sql",
+        "sha256": "edc37140cc051b5b7be627b4a3908e0c8ca226e7c7a5961bc96fd13392225290"
+      }
+    ],
+    "note": "서명이 맞지 않는 번들",
+    "break": "",
+    "tamper": "signature"
+  },
+  {
+    "name": "harborline",
+    "version": "v1.2.3",
+    "min_from": "v1.2.0",
+    "schema": "none",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.2.3.tar",
+        "sha256": "cac479d0432138fc13220007594ce554a44e6193b211b34f63c89711f62c1f33"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      },
+      {
+        "path": "migrations/0002_inquiry_state.sql",
+        "sha256": "edc37140cc051b5b7be627b4a3908e0c8ca226e7c7a5961bc96fd13392225290"
+      }
+    ],
+    "note": "이미지 파일이 변조된 번들",
+    "break": "",
+    "tamper": "checksum"
+  },
+  {
+    "name": "harborline",
+    "version": "v1.4.0",
+    "min_from": "v1.3.0",
+    "schema": "none",
+    "files": [
+      {
+        "path": "images/harborline-app-v1.4.0.tar",
+        "sha256": "df2ffb71a32d7a5a759cf52c5dacb3489bd36273a411fc80f9ea4a2c89d7ba4a"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      },
+      {
+        "path": "migrations/0002_inquiry_state.sql",
+        "sha256": "edc37140cc051b5b7be627b4a3908e0c8ca226e7c7a5961bc96fd13392225290"
+      }
+    ],
+    "note": "v1.3.0 이상에서만 올릴 수 있는 릴리스(건너뛴 버전 시험용)",
+    "break": "",
+    "tamper": ""
+  },
+  {
+    "name": "harborline",
+    "version": "v2.0.0",
+    "min_from": "v1.2.0",
+    "schema": "breaking",
+    "files": [
+      {
+        "path": "images/harborline-app-v2.0.0.tar",
+        "sha256": "1ee66f057a38c32772c750f07db8d7e2a027a8beeebd425797aa6707f0bbdce4"
+      },
+      {
+        "path": "migrations/0001_init.sql",
+        "sha256": "28c57884aa48421f99dfdaee1328f5330649b65797e649c5bc1dde344c9dcb32"
+      },
+      {
+        "path": "migrations/0002_inquiry_state.sql",
+        "sha256": "edc37140cc051b5b7be627b4a3908e0c8ca226e7c7a5961bc96fd13392225290"
+      },
+      {
+        "path": "migrations/0003_drop_status.sql",
+        "sha256": "c1f73e3dfaed525697835106ee64f896f7ee72f40d32d1e147fc54a8d636b4e2"
+      }
+    ],
+    "note": "호환되지 않는 스키마 변경 + 상태 점검 실패(정지·복구 시험용)",
+    "break": "health",
+    "tamper": ""
+  }
+]

@@ -1,0 +1,116 @@
+[
+  {
+    "profile": "full",
+    "tools": true,
+    "json_mode": true,
+    "context_tokens": 8192,
+    "reachable": true,
+    "classify": {
+      "status": "통과",
+      "path": "tools"
+    },
+    "draft_short": {
+      "status": "통과",
+      "path": "direct"
+    },
+    "draft_long": {
+      "status": "통과",
+      "path": "direct"
+    }
+  },
+  {
+    "profile": "no-tools",
+    "tools": false,
+    "json_mode": true,
+    "context_tokens": 8192,
+    "reachable": true,
+    "classify": {
+      "status": "대체 경로",
+      "path": "json_mode"
+    },
+    "draft_short": {
+      "status": "통과",
+      "path": "direct"
+    },
+    "draft_long": {
+      "status": "통과",
+      "path": "direct"
+    }
+  },
+  {
+    "profile": "no-json",
+    "tools": false,
+    "json_mode": false,
+    "context_tokens": 8192,
+    "reachable": true,
+    "classify": {
+      "status": "대체 경로",
+      "path": "prompt_json"
+    },
+    "draft_short": {
+      "status": "통과",
+      "path": "direct"
+    },
+    "draft_long": {
+      "status": "통과",
+      "path": "direct"
+    }
+  },
+  {
+    "profile": "short-ctx",
+    "tools": true,
+    "json_mode": true,
+    "context_tokens": 1024,
+    "reachable": true,
+    "classify": {
+      "status": "통과",
+      "path": "tools"
+    },
+    "draft_short": {
+      "status": "통과",
+      "path": "direct"
+    },
+    "draft_long": {
+      "status": "대체 경로",
+      "path": "chunked"
+    }
+  },
+  {
+    "profile": "bare",
+    "tools": false,
+    "json_mode": false,
+    "context_tokens": 1024,
+    "reachable": true,
+    "classify": {
+      "status": "대체 경로",
+      "path": "prompt_json"
+    },
+    "draft_short": {
+      "status": "통과",
+      "path": "direct"
+    },
+    "draft_long": {
+      "status": "대체 경로",
+      "path": "chunked"
+    }
+  },
+  {
+    "profile": "unreachable",
+    "tools": false,
+    "json_mode": false,
+    "context_tokens": 0,
+    "reachable": false,
+    "classify": {
+      "status": "비활성",
+      "path": "disabled"
+    },
+    "draft_short": {
+      "status": "비활성",
+      "path": "disabled"
+    },
+    "draft_long": {
+      "status": "비활성",
+      "path": "disabled"
+    }
+  }
+]

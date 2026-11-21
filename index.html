@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harborline · 업그레이드 판정 시뮬레이터</title>
+<meta name="description" content="인터넷이 없는 고객사 서버에 설치형 릴리스를 올릴 때의 판정(매니페스트 게이트·자동 롤백·정지 후 복구)을 브라우저에서 실행해 봅니다. 판정 로직은 실제 Go 코드를 WebAssembly 로 컴파일한 것입니다.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%230b1215%27/%3E%3Cpath d=%27M6 22l6-12 4 8 4-8 6 12z%27 fill=%27%233ec3b0%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skiplink" href="#timeline">본문으로 건너뛰기</a>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">▞</span>
+    <span class="word">harborline</span>
+    <span class="sub">upgrade simulator</span>
+  </div>
+  <p class="banner" role="note"><strong>브라우저 시뮬레이션</strong> — 판정 로직만 실제 코드(Go → WebAssembly). 서버·도커·네트워크 호출 없음.</p>
+  <button id="theme" class="ghost" type="button" aria-label="테마 전환(다크/라이트)">◐</button>
+</header>
+
+<main>
+  <section class="panel controls" aria-labelledby="h-scn">
+    <h2 id="h-scn">시나리오</h2>
+    <div class="presets" role="group" aria-label="미리 정해 둔 시나리오" id="presets"></div>
+
+    <label for="current">현재 설치 버전</label>
+    <select id="current"></select>
+
+    <label for="target">올릴 릴리스(번들)</label>
+    <select id="target"></select>
+    <p class="hint" id="target-note"></p>
+
+    <fieldset>
+      <legend>실패 주입</legend>
+      <label class="radio"><input type="radio" name="fail" value="none" checked> 없음</label>
+      <label class="radio"><input type="radio" name="fail" value="badSignature"> 서명 불일치 <span class="tag">verify</span></label>
+      <label class="radio"><input type="radio" name="fail" value="badChecksum"> 이미지 변조(체크섬) <span class="tag">verify</span></label>
+      <label class="radio"><input type="radio" name="fail" value="backup"> 백업 실패 <span class="tag">backup</span></label>
+      <label class="radio"><input type="radio" name="fail" value="migrate"> 마이그레이션 실패 <span class="tag">migrate</span></label>
+      <label class="radio"><input type="radio" name="fail" value="health"> 새 버전 상태 점검 실패 <span class="tag">health</span></label>
+      <label class="check"><input type="checkbox" id="rbBroken"> 이전 버전 복귀도 실패</label>
+    </fieldset>
+    <button id="run" class="primary" type="button">다시 실행</button>
+  </section>
+
+  <section class="stage" aria-labelledby="h-res">
+    <h2 id="h-res" class="sr">결과</h2>
+    <div id="decision" class="decision" aria-live="polite"></div>
+    <ol id="timeline" class="timeline" aria-label="단계별 진행"></ol>
+  </section>
+
+  <section class="panel tabs" aria-labelledby="h-ev">
+    <h2 id="h-ev" class="sr">근거</h2>
+    <div role="tablist" aria-label="근거 자료" id="tablist">
+      <button role="tab" id="t-term" aria-controls="p-term" aria-selected="true" type="button">실제 e2e 터미널 출력</button>
+      <button role="tab" id="t-llm" aria-controls="p-llm" aria-selected="false" tabindex="-1" type="button">LLM 호환성 표</button>
+      <button role="tab" id="t-lint" aria-controls="p-lint" aria-selected="false" tabindex="-1" type="button">마이그레이션 규약 검사</button>
+      <button role="tab" id="t-man" aria-controls="p-man" aria-selected="false" tabindex="-1" type="button">매니페스트</button>
+    </div>
+    <div role="tabpanel" id="p-term" aria-labelledby="t-term" tabindex="0">
+      <p class="hint" id="term-note"></p>
+      <div id="term"></div>
+    </div>
+    <div role="tabpanel" id="p-llm" aria-labelledby="t-llm" tabindex="0" hidden>
+      <p class="hint">고객사 내부 OpenAI 호환 엔드포인트를 흉내 낸 모의 서버 5종 + 응답 없는 엔드포인트에 같은 시나리오를 돌린 실제 실행 결과입니다(<code>make compat</code>). 모의 서버는 규칙 기반이라 모델 품질이 아니라 기능 탐지와 대체 경로만 검증합니다.</p>
+      <div class="scroll"><table id="llm"></table></div>
+    </div>
+    <div role="tabpanel" id="p-lint" aria-labelledby="t-lint" tabindex="0" hidden>
+      <p class="hint">expand → contract 규약 검사기(<code>release.Lint</code>)를 이 브라우저에서 그대로 실행합니다. 릴리스 빌드에서는 같은 검사가 번들 생성을 막습니다.</p>
+      <label for="sql">마이그레이션 파일(헤더 주석 포함)</label>
+      <textarea id="sql" rows="9" spellcheck="false"></textarea>
+      <div class="row">
+        <label for="lint-rel">릴리스</label><input id="lint-rel" value="v1.3.0" size="8">
+        <label for="lint-decl">선언한 schema</label>
+        <select id="lint-decl"><option>compatible</option><option>none</option><option>breaking</option></select>
+      </div>
+      <div id="lint-out" aria-live="polite"></div>
+    </div>
+    <div role="tabpanel" id="p-man" aria-labelledby="t-man" tabindex="0" hidden>
+      <p class="hint">선택한 릴리스의 실제 <code>manifest.json</code>(번들 빌드가 만든 파일, SHA-256 포함)입니다. 서명은 이 파일의 원문 바이트에 대해 합니다.</p>
+      <pre id="manifest" class="term"></pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>외부 요청 없음: 글꼴·스크립트·데이터 모두 이 사이트 안의 파일입니다.</span>
+  <a href="https://github.com/choibongseok/harborline">소스 저장소</a>
+</footer>
+
+<script src="wasm_exec.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
