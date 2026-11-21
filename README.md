@@ -154,8 +154,8 @@ e2e 의 고객 사이트는 `internal: true` 도커 네트워크입니다. 앱�
 |---|---|---|
 | unit (판정 로직·어댑터·설정·번들 검사·호환성 표) | 86 | `make test-unit` |
 | integration (실제 PG·LDAP·Keycloak, STARTTLS SMTP) | 19 | `make test-int` |
-| e2e (격리 네트워크 설치·업그레이드·복구·프록시 21 / 데모 사이트 브라우저 13) | 34 | `make e2e`, `make verify` |
-| **합계** | **139** | `make verify` |
+| e2e (격리 네트워크 설치·업그레이드·복구·프록시 21 / 데모 사이트 브라우저 20) | 41 | `make e2e`, `make verify` |
+| **합계** | **146** | `make verify` |
 
 - `make test-unit` 단위 테스트, `make test-int` 통합 테스트(실제 PostgreSQL·OpenLDAP·Keycloak 을 올림), `make e2e` 격리 네트워크 e2e, `make verify` 전체(규약 검사 → 단위 → 통합 → 번들 → e2e → 호환성 표 → 사이트 빌드·브라우저 시험 → 문서 대조). 끝나면 올린 컨테이너를 내립니다.
 - 모든 테스트 케이스는 [docs/TEST_CASES.md](docs/TEST_CASES.md) 의 행과 1:1 이고, `make verify` 가 실제 실행 결과와 대조합니다.

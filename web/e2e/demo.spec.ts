@@ -21,7 +21,7 @@ test('판정 엔진(WebAssembly)이 뜨고 기본 시나리오 결과가 나오�
 
 test('정상 업그레이드: 스키마 변경이 없으면 마이그레이션을 건너뛰고 성공한다', async ({ page }) => {
   await open(page);
-  await preset(page, '정상 · 스키마 변경 없음').click();
+  await preset(page, '정상적으로 올라감').click();
   await expect(page.locator('#decision')).toContainText('업그레이드 성공');
   await expect(page.locator('#decision')).toContainText('종료 코드 0');
   await expect(stage(page, 'migrate').locator('.chip')).toHaveText('SKIP');
@@ -31,7 +31,7 @@ test('정상 업그레이드: 스키마 변경이 없으면 마이그레이션�
 
 test('상태 점검 실패: 스키마 변경이 없으면 이전 버전으로 자동 복귀한다', async ({ page }) => {
   await open(page);
-  await preset(page, '상태 점검 실패').click();
+  await preset(page, '새 버전이 안 뜸').click();
   await expect(page.locator('#decision')).toContainText('자동 복귀');
   await expect(page.locator('#decision')).toContainText('종료 코드 4');
   await expect(stage(page, 'health').locator('.chip')).toHaveText('FAIL');
@@ -41,7 +41,7 @@ test('상태 점검 실패: 스키마 변경이 없으면 이전 버전으로 �
 
 test('호환되지 않는 스키마 변경이 실패하면 자동 복귀 없이 정지하고 복구를 안내한다', async ({ page }) => {
   await open(page);
-  await preset(page, '호환 불가 스키마').click();
+  await preset(page, 'DB 구조가 바뀜 + 실패').click();
   await expect(page.locator('#decision')).toContainText('정지 후 복구');
   await expect(page.locator('#decision')).toContainText('종료 코드 5');
   await expect(page.locator('#decision')).toContainText('harborctl restore');
@@ -60,21 +60,21 @@ test('건너뛴 버전은 게이트에서 거부되고 백업도 만들지 않�
 
 test('서명 불일치와 이미지 변조는 검증 단계에서 거부된다', async ({ page }) => {
   await open(page);
-  await preset(page, '서명 불일치').click();
+  await preset(page, '서명이 맞지 않음').click();
   await expect(stage(page, 'verify')).toContainText('서명이 맞지 않음');
   await expect(page.locator('#decision')).toContainText('종료 코드 2');
-  await preset(page, '이미지 변조').click();
+  await preset(page, '파일이 변조됨').click();
   await expect(stage(page, 'verify')).toContainText('체크섬이 맞지 않음');
 });
 
 test('직접 고른 버전과 실패 주입이 판정에 반영되고 시나리오 선택 표시가 풀린다', async ({ page }) => {
   await open(page);
-  await preset(page, '정상 · 스키마 변경 없음').click();
-  await expect(preset(page, '정상 · 스키마 변경 없음')).toHaveAttribute('aria-pressed', 'true');
+  await preset(page, '정상적으로 올라감').click();
+  await expect(preset(page, '정상적으로 올라감')).toHaveAttribute('aria-pressed', 'true');
   await page.locator('#current').selectOption('v1.2.0');
   await page.locator('#target').selectOption('v2.0.0');
   await page.getByLabel('마이그레이션 실패').check();
-  await expect(preset(page, '정상 · 스키마 변경 없음')).toHaveAttribute('aria-pressed', 'false');
+  await expect(preset(page, '정상적으로 올라감')).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('#decision')).toContainText('정지 후 복구');
   await expect(stage(page, 'migrate').locator('.chip')).toHaveText('FAIL');
   await page.getByLabel('없음', { exact: true }).check();
@@ -85,11 +85,11 @@ test('직접 고른 버전과 실패 주입이 판정에 반영되고 시나리�
 
 test('실제 e2e 터미널 출력 탭이 해당 시나리오의 harborctl 실행 기록을 보여 준다', async ({ page }) => {
   await open(page);
-  await preset(page, '상태 점검 실패').click();
+  await preset(page, '새 버전이 안 뜸').click();
   await expect(page.locator('#p-term')).toContainText('harborctl upgrade --bundle ./harborline-v1.1.1');
   await expect(page.locator('#p-term')).toContainText('이전 버전으로 복귀, 상태 점검 통과');
   await expect(page.locator('#p-term')).toContainText('(종료 코드 4)');
-  await preset(page, '호환 불가 스키마').click();
+  await preset(page, 'DB 구조가 바뀜 + 실패').click();
   await expect(page.locator('#p-term')).toContainText('harborctl restore');
 });
 
