@@ -14,7 +14,9 @@ const start = (page: Page) => page.getByRole('button', { name: '설명 따라가
 
 test('첫 화면에 한 문장 설명과 두 버튼이 있고, 이미 본 방문자에게는 설명 패널이 닫혀 있다', async ({ page }) => {
   await open(page);
-  await expect(page.locator('h1')).toContainText('잘못되면 어떻게 되돌리는지 보여 주는 데모');
+  await expect(page.locator('h1')).toHaveText('온프렘용 모의 업그레이드');
+  await expect(page.locator('.hero .sub')).toContainText('잘못되면 어떻게 되돌리는지 보여 주는 데모');
+  await expect(page).toHaveTitle('온프렘용 모의 업그레이드 — Harborline');
   await expect(start(page)).toBeVisible();
   await expect(page.getByRole('button', { name: '직접 해 보기' })).toBeVisible();
   await expect(tour(page)).toBeHidden();
@@ -168,6 +170,6 @@ test('모바일 폭에서 저절로 열린 설명 시트가 첫 화면의 한 �
   await open(page, '', false);
   await expect(tour(page)).toBeVisible();
   await page.waitForTimeout(600);
-  const r = await page.evaluate(() => ({ h1: document.querySelector('h1')!.getBoundingClientRect().bottom, sheet: document.getElementById('tour')!.getBoundingClientRect().top }));
+  const r = await page.evaluate(() => ({ h1: document.querySelector('.hero .sub')!.getBoundingClientRect().bottom, sheet: document.getElementById('tour')!.getBoundingClientRect().top }));
   expect(r.h1).toBeLessThan(r.sheet);
 });

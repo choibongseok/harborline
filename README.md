@@ -2,7 +2,7 @@
 
 **라이브 데모: https://choibongseok.github.io/harborline/**
 
-![업그레이드 판정 시뮬레이터(다크, 기본)](docs/demo-desktop-dark.png)
+![온프렘용 모의 업그레이드(다크, 기본)](docs/demo-desktop-dark.png)
 
 ![라이트 테마](docs/demo-desktop-light.png)
 
