@@ -53,7 +53,7 @@ if (existsSync(pw)) {
 
 const rows = doc
   .split('\n')
-  .filter((l) => /^\| [A-Z]+-\d{3} \|/.test(l))
+  .filter((l) => /^\| [A-Z0-9]+-\d{3} \|/.test(l))
   .map((l) => l.split(' | ').map((c) => c.replace(/^\| /, '').replace(/ \|$/, '').trim()));
 
 const kindOf = (f) => (f.startsWith('test/integration/') ? 'integration' : f.startsWith('test/e2e/') || f.startsWith('web/e2e/') ? 'e2e' : 'unit');

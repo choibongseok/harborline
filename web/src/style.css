@@ -16,8 +16,8 @@ body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 var
 code, pre, .mono, select, input, textarea, .tag, th { font-family: var(--mono); }
 code { background: var(--panel2); padding: .05em .35em; border-radius: 4px; font-size: .92em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.skip { position: absolute; left: 8px; top: -48px; background: var(--accent); color: var(--on-accent); padding: 8px 12px; border-radius: 6px; z-index: 10; }
-.skip:focus { top: 8px; }
+.skiplink { position: absolute; left: 8px; top: -48px; background: var(--accent); color: var(--on-accent); padding: 8px 12px; border-radius: 6px; z-index: 10; }
+.skiplink:focus { top: 8px; }
 :focus-visible { outline: 2px solid var(--info); outline-offset: 2px; border-radius: 4px; }
 
 .top { display: flex; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 5; }
@@ -31,6 +31,7 @@ button { font: inherit; cursor: pointer; }
 .ghost { background: none; border: 1px solid var(--line); color: var(--text); border-radius: 6px; width: 34px; height: 34px; font-size: 16px; }
 .ghost:hover { border-color: var(--accent); }
 
+main > * { min-width: 0; }
 main { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 16px; padding: 16px 20px 28px; max-width: 1280px; margin: 0 auto; }
 .controls { grid-row: 1 / span 2; align-self: start; position: sticky; top: 72px; }
 .tabs { grid-column: 2; }
@@ -41,7 +42,7 @@ select, input[type="text"], input:not([type]), textarea {
   width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; font-size: 13px;
 }
 textarea { resize: vertical; line-height: 1.45; }
-.hint { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; overflow-wrap: anywhere; }
 fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 14px 0 0; padding: 6px 12px 10px; }
 legend { font: 12px var(--mono); color: var(--muted); padding: 0 6px; }
 label.radio, label.check { display: flex; align-items: center; gap: 8px; color: var(--text); margin: 6px 0; font-size: 14px; cursor: pointer; }
@@ -88,6 +89,7 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); width
 [role="tab"] { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 8px 10px; font: 13px var(--sans); }
 [role="tab"][aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
 [role="tabpanel"][hidden] { display: none; }
+pre { max-width: 100%; }
 .term { background: #070d10; color: #cfe0e4; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 0 0 10px; font-size: 12.5px; line-height: 1.5; overflow-x: auto; white-space: pre; }
 :root[data-theme="light"] .term { background: #10242b; }
 .term .cmd { color: #7fd6c8; }

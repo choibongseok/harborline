@@ -71,10 +71,17 @@ function fillSelects() {
   for (const m of data.manifests) tgt.append(el('option', { value: m.version, textContent: `${m.version}  · schema ${m.schema} · min ${m.min_from}` }));
 }
 
+// 릴리스 정의에 박힌 결함(상태 점검이 실패하는 이미지, 잘못 서명된 번들 등)은 선택한 실패 주입과 별개로 항상 적용한다.
 function readInput() {
   const fail = document.querySelector('input[name="fail"]:checked').value;
-  const inject = { badSignature: fail === 'badSignature', badChecksum: fail === 'badChecksum', rollbackBroken: $('rbBroken').checked };
+  const m = manifestOf($('target').value) || {};
+  const inject = {
+    badSignature: fail === 'badSignature' || m.tamper === 'signature',
+    badChecksum: fail === 'badChecksum' || m.tamper === 'checksum',
+    rollbackBroken: $('rbBroken').checked,
+  };
   if (['backup', 'migrate', 'health'].includes(fail)) inject.failAt = fail;
+  else if (m.break === 'health') inject.failAt = 'health';
   return { current: $('current').value, target: $('target').value, inject, fail };
 }
 
@@ -88,7 +95,7 @@ function run(activePreset) {
   render(JSON.parse(out.json), inp, m);
   renderManifest(m);
   renderTerm(activePreset);
-  $('target-note').textContent = m.note || '';
+  $('target-note').textContent = m.note ? `릴리스 정의: ${m.note}` : '';
 }
 
 function render(res, inp, m) {

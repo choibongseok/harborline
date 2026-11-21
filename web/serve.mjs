@@ -11,7 +11,7 @@ createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   if (!url.pathname.startsWith('/harborline/')) { res.writeHead(url.pathname === '/' ? 302 : 404, { Location: '/harborline/' }).end(); return; }
   let p = normalize(url.pathname.slice('/harborline/'.length));
-  if (p === '' || p.endsWith('/')) p += 'index.html';
+  if (p === '.' || p === '' || p.endsWith('/')) p = join(p === '.' ? '' : p, 'index.html');
   if (p.startsWith('..')) { res.writeHead(400).end(); return; }
   try {
     const b = await readFile(join(root, p));

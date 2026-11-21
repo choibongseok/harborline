@@ -10,7 +10,7 @@ const manifests = [];
 for (const d of readdirSync('dist/bundles').filter((x) => x.startsWith('harborline-v'))) {
   const m = JSON.parse(readFileSync(join('dist/bundles', d, 'manifest.json'), 'utf8'));
   const def = JSON.parse(readFileSync(`releases/${m.version}.json`, 'utf8'));
-  manifests.push({ ...m, note: def.note ?? '' });
+  manifests.push({ ...m, note: def.note ?? '', break: def.break ?? '', tamper: def.tamper ?? '' });
 }
 const vkey = (v) => v.replace('v', '').split('.').map((n) => String(n).padStart(4, '0')).join('.');
 manifests.sort((a, b) => vkey(a.version).localeCompare(vkey(b.version)));
