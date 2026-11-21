@@ -57,6 +57,8 @@ func TestMain(m *testing.M) {
 	certsDir = filepath.Join(root, "dist", "e2e-certs")
 	instDir = filepath.Join(root, "dist", "e2e-install")
 	pubKey = filepath.Join(root, "dist", "keys", "release.pub")
+	_ = os.MkdirAll(filepath.Join(root, "dist"), 0o755)
+	_ = os.Remove(filepath.Join(root, "dist", "e2e-transcripts.jsonl"))
 	if err := setup(); err != nil {
 		fmt.Fprintln(os.Stderr, "e2e 준비 실패:", err)
 		os.Exit(1)
@@ -133,6 +135,7 @@ func ctl(t *testing.T, args ...string) (string, int) {
 	full := append(args, "--dir", instDir)
 	out, code := sh(root, nil, filepath.Join(root, "dist", "bin", "harborctl"), full...)
 	t.Logf("$ harborctl %s\n%s(종료 코드 %d)", strings.Join(args, " "), out, code)
+	recordTranscript(t.Name(), args, out, code)
 	return out, code
 }
 
@@ -304,4 +307,40 @@ func mailsReceived(t *testing.T) []string {
 		}
 	}
 	return ls
+}
+
+// recordTranscript 는 harborctl 실행 결과를 dist/e2e-transcripts.jsonl 에 덧붙인다(데모 사이트에 싣는 실제 실행 기록의 원본).
+func recordTranscript(test string, args []string, out string, code int) {
+	clean := make([]string, 0, len(args))
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--config":
+			i++
+		case "--bundle", "--pubkey":
+			if args[i] == "--bundle" {
+				clean = append(clean, "--bundle", "./"+filepath.Base(args[i+1]))
+			} else {
+				clean = append(clean, "--pubkey", "./release.pub")
+			}
+			i++
+		default:
+			clean = append(clean, args[i])
+		}
+	}
+	rec, _ := json.Marshal(map[string]any{"test": test, "cmd": "harborctl " + strings.Join(clean, " "), "output": scrub(out), "exit": code})
+	f, err := os.OpenFile(filepath.Join(root, "dist", "e2e-transcripts.jsonl"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err == nil {
+		_, _ = f.Write(append(rec, '\n'))
+		f.Close()
+	}
+}
+
+// scrub 은 개인 경로를 지운다(기록을 공개 데모에 싣기 때문).
+func scrub(s string) string {
+	s = strings.ReplaceAll(s, root, ".")
+	home, _ := os.UserHomeDir()
+	if home != "" {
+		s = strings.ReplaceAll(s, home, "~")
+	}
+	return s
 }

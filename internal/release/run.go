@@ -161,6 +161,7 @@ func Upgrade(ctx context.Context, current string, m Manifest, ex Executor) Resul
 // Injection 은 시뮬레이션에서 일부러 넣는 실패다.
 type Injection struct {
 	BadSignature   bool  `json:"badSignature"`
+	BadChecksum    bool  `json:"badChecksum"`
 	FailAt         Stage `json:"failAt"`         // "" 이면 실패 없음. backup/load/migrate/switch/health
 	RollbackBroken bool  `json:"rollbackBroken"` // 이전 버전 복귀 중에도 실패
 }
@@ -177,6 +178,9 @@ func (s *SimExecutor) Verify(context.Context) error {
 	s.Calls = append(s.Calls, "verify")
 	if s.In.BadSignature {
 		return fmt.Errorf("%w (서명 불일치로 주입)", ErrSignature)
+	}
+	if s.In.BadChecksum {
+		return fmt.Errorf("%w (이미지 파일 변조로 주입)", ErrChecksum)
 	}
 	return nil
 }
