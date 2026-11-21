@@ -1,0 +1,97 @@
+{
+  "realm": "harborline",
+  "enabled": true,
+  "sslRequired": "none",
+  "groups": [
+    {
+      "name": "support"
+    },
+    {
+      "name": "admins"
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "email": "alice@harborline.test",
+      "emailVerified": true,
+      "firstName": "Alice",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "alicepw",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/support"
+      ]
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "email": "bob@harborline.test",
+      "emailVerified": true,
+      "firstName": "Bob",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "bobpw",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/admins"
+      ]
+    },
+    {
+      "username": "carol",
+      "enabled": true,
+      "email": "carol@harborline.test",
+      "emailVerified": true,
+      "firstName": "Carol",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "carolpw",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "harborline",
+      "enabled": true,
+      "secret": "client-secret",
+      "publicClient": false,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "http://localhost:*",
+        "http://127.0.0.1:*"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "groups",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ]
+}

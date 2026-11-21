@@ -1,0 +1,38 @@
+dn: ou=people,dc=harborline,dc=test
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=harborline,dc=test
+objectClass: organizationalUnit
+ou: groups
+
+dn: uid=alice,ou=people,dc=harborline,dc=test
+objectClass: inetOrgPerson
+uid: alice
+cn: Alice Support
+sn: Support
+userPassword: alicepw
+
+dn: uid=bob,ou=people,dc=harborline,dc=test
+objectClass: inetOrgPerson
+uid: bob
+cn: Bob Admin
+sn: Admin
+userPassword: bobpw
+
+dn: uid=carol,ou=people,dc=harborline,dc=test
+objectClass: inetOrgPerson
+uid: carol
+cn: Carol Nogroup
+sn: Nogroup
+userPassword: carolpw
+
+dn: cn=support,ou=groups,dc=harborline,dc=test
+objectClass: groupOfNames
+cn: support
+member: uid=alice,ou=people,dc=harborline,dc=test
+
+dn: cn=admins,ou=groups,dc=harborline,dc=test
+objectClass: groupOfNames
+cn: admins
+member: uid=bob,ou=people,dc=harborline,dc=test
