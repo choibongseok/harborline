@@ -98,33 +98,43 @@ function run(activePreset) {
   $('target-note').textContent = m.note ? `릴리스 정의: ${m.note}` : '';
 }
 
+function stat(label, value, cls = '') {
+  const d = el('div', { className: `stat ${cls}` });
+  d.append(el('span', { className: 'k', textContent: label }), ' ', el('span', { className: 'v', textContent: value }));
+  return d;
+}
+
 function render(res, inp, m) {
   const [label, code] = OUTCOME[res.outcome];
   const d = $('decision');
   d.dataset.o = res.outcome;
-  d.replaceChildren(
+  const main = el('div', { className: 'panel result' });
+  main.append(
+    el('h3', { className: 'ptitle', textContent: '판정 결과' }),
     el('p', { className: 'what', textContent: label }),
-    el('p', { className: 'meta', textContent: `harborctl 종료 코드 ${code} · ${inp.current || '신규 설치'} → ${m.version}` }),
+    el('p', { className: 'meta', textContent: `${inp.current || '신규 설치'} → ${m.version}` }),
   );
-  if (res.advice) d.append(el('p', { className: 'advice', textContent: res.advice }));
-  const facts = el('div', { className: 'facts' });
-  const add = (k, v) => facts.append(el('span', {}, `${k} `, el('b', { textContent: v })));
-  add('이후 버전', res.currentAfter || '없음');
-  add('스키마 변경', res.schema);
-  add('자동 롤백', res.rollbackOk ? '가능' : '불가');
-  d.append(facts, el('p', { className: 'hint', textContent: `근거: ${res.rollbackWhy}` }));
+  if (res.advice) main.append(el('p', { className: 'advice', textContent: res.advice }));
+  main.append(el('p', { className: 'hint', textContent: `근거: ${res.rollbackWhy}` }));
+  const stats = el('div', { className: 'stats' });
+  stats.append(
+    stat('harborctl 종료 코드', String(code), res.outcome),
+    stat('이후 버전', res.currentAfter || '없음'),
+    stat('스키마 변경', res.schema),
+    stat('자동 롤백', res.rollbackOk ? '가능' : '불가', res.rollbackOk ? 'okv' : 'badv'),
+  );
+  d.replaceChildren(main, stats);
 
   const byStage = new Map(res.events.map((e) => [e.stage, e]));
   const tl = $('timeline');
   tl.replaceChildren();
-  STAGES.forEach(([id, name, sub], i) => {
+  STAGES.forEach(([id, name], i) => {
     const ev = byStage.get(id);
     const li = el('li', { className: ev ? ev.status : 'none' });
     li.style.setProperty('--i', i);
     li.append(
-      el('span', { className: 'n', textContent: String(i + 1).padStart(2, '0') }),
-      el('span', { className: 'st' }, name, el('small', { textContent: id })),
       el('span', { className: `chip ${ev ? ev.status : 'none'}`, textContent: ev ? ev.status.toUpperCase() : '—' }),
+      el('span', { className: 'st' }, `${i + 1}. ${name}`, el('small', { textContent: id })),
       el('span', { className: 'detail', textContent: ev ? ev.detail : (id === 'rollback' ? '실패가 없어 실행하지 않음' : '앞 단계에서 끝나 실행하지 않음') }),
     );
     tl.append(li);
@@ -234,7 +244,7 @@ function setupTheme() {
   const root = document.documentElement;
   let saved = null;
   try { saved = localStorage.getItem('hl-theme'); } catch {}
-  const pref = saved || 'light';
+  const pref = saved || 'dark';
   root.dataset.theme = pref;
   $('theme').addEventListener('click', () => {
     root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
